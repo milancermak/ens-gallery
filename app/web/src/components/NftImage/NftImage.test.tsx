@@ -1,11 +1,11 @@
 import { render } from '@redwoodjs/testing/web'
 
-import GalleryLayout from './GalleryLayout'
+import NftImage from './NftImage'
 
-describe('GalleryLayout', () => {
+describe('NftImage', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<GalleryLayout />)
+      render(<NftImage />)
     }).not.toThrow()
   })
 })

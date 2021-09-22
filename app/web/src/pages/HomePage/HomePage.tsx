@@ -1,12 +1,14 @@
-import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 import { useEffect, useState } from 'react'
+// TODO: explore react-ens-address maybe it's enough?
 import ENS, { getEnsAddress } from '@ensdomains/ensjs'
 import { ethers } from 'ethers'
-import { ACCOUNT_ADDRESS } from 'src/Data'
+import { ACCOUNT_ADDRESS } from 'src/Mock'
+import Gallery from 'src/components/Gallery/Gallery'
 
 const HomePage = () => {
-  const [domainAddr, setDomainAddr] = useState()
+  const [ensDomain, setEnsDomain] = useState('')
+  const [domainAddr, setDomainAddr] = useState('')
   const [nfts, setNfts] = useState([])
 
   useEffect(() => {
@@ -19,14 +21,16 @@ const HomePage = () => {
       //       then, check for the subdomain higher since I'm assuming the app
       //       will run on sth like gallery.anon.eth (so want anon.eth to resolve)
       // const url = new URL(document.URL)
-      let ethDomain = 'dcinvestor.eth.link'
+      let host = 'dcinvestor.eth.link'
 
-      if (ethDomain.endsWith('.link')) {
-        ethDomain = ethDomain.substring(0, ethDomain.length - 5)
+      if (host.endsWith('.link')) {
+        host = host.substring(0, host.length - 5)
       }
 
-      const resolvedAddress = await ens.name(ethDomain).getAddress()
-      console.log(`Address for ${ethDomain} is ${resolvedAddress}`)
+      setEnsDomain(host)
+
+      const resolvedAddress = await ens.name(ensDomain).getAddress()
+      console.log(`Address for ${ensDomain} is ${resolvedAddress}`)
 
       setDomainAddr(resolvedAddress)
       setNfts(ACCOUNT_ADDRESS.nfts)
@@ -58,7 +62,7 @@ const HomePage = () => {
           })
           */
     })()
-  }, [])
+  }, [ensDomain])
 
   return (
     <>
@@ -68,19 +72,11 @@ const HomePage = () => {
       /* you should un-comment description and add a unique description, 155 characters or less
 You can look at this documentation for best practices : https://developers.google.com/search/docs/advanced/appearance/good-titles-snippets */
       />
-      <h1>HomePage</h1>
-      <p>
-        My default route is named <code>home</code>, link to me with `
-        <Link to={routes.home()}>Home</Link>`
-      </p>
-      {nfts
-        .filter((nft) => nft.metadata !== null)
-        .map((nft) => (
-          <>
-            <img src={nft.metadata.image} alt="" height="320" width="200" />
-            <br />
-          </>
-        ))}
+      <h1>
+        Gallery for {ensDomain} @ {domainAddr}
+      </h1>
+
+      <Gallery images={nfts}></Gallery>
     </>
   )
 }

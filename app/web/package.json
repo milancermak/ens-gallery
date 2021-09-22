@@ -26,5 +26,11 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "stream-browserify": "^3.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.3.5",
+    "postcss": "^8.3.7",
+    "postcss-loader": "^6.1.1",
+    "tailwindcss": "^2.2.15"
   }
 }
