@@ -20,6 +20,8 @@ const HomePage = () => {
       // TODO: using this for dev purposes, switch to document.URL when going live
       //       then, check for the subdomain higher since I'm assuming the app
       //       will run on sth like gallery.anon.eth (so want anon.eth to resolve)
+      //
+      //       support eth.limo as well was eth.link
       // const url = new URL(document.URL)
       let host = 'dcinvestor.eth.link'
 
