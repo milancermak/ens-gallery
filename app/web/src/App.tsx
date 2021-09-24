@@ -39,7 +39,6 @@ const App = () => {
       const address = await ens.name(domain).getAddress()
       console.log(`Resolved ${domain} to ${address}`)
       onChange({ address, domain })
-      //onChange(address)
     })()
   })
 
