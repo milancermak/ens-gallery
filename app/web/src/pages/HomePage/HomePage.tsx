@@ -32,7 +32,7 @@ const HomePage = () => {
       setEnsDomain(host)
 
       const resolvedAddress = await ens.name(ensDomain).getAddress()
-      console.log(`Address for ${ensDomain} is ${resolvedAddress}`)
+      //console.log(`Address for ${ensDomain} is ${resolvedAddress}`)
 
       setDomainAddr(resolvedAddress)
       setNfts(ACCOUNT_ADDRESS.nfts)
