@@ -18,12 +18,11 @@ const NftImage = (nft: NftImageProps) => {
     return (
       <div className="w-full rounded hover:shadow-2xl">
         {imageFailedToLoad ? (
-          <div className="w-full rounded hover:shadow-2xl">
-            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-            <video src={nft.metadata?.image}></video>
-          </div>
+          /* eslint-disable-next-line jsx-a11y/media-has-caption */
+          <video src={nft.metadata?.image}></video>
         ) : (
           <img
+            className="object-contain object-center h-full"
             src={nft.metadata.image}
             alt={nft.metadata?.name || 'NFT'}
             onError={() => setImageFailedToLoad(true)}
