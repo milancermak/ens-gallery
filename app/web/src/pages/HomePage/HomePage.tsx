@@ -1,40 +1,15 @@
 import { MetaTags } from '@redwoodjs/web'
 import { useEffect, useState } from 'react'
-// TODO: explore react-ens-address maybe it's enough?
-import ENS, { getEnsAddress } from '@ensdomains/ensjs'
-import { ethers } from 'ethers'
+import { useEns } from 'src/hooks/useEns'
 import { ACCOUNT_ADDRESS } from 'src/Mock'
 import Gallery from 'src/components/Gallery/Gallery'
 
 const HomePage = () => {
-  const [ensDomain, setEnsDomain] = useState('')
-  const [domainAddr, setDomainAddr] = useState('')
+  const ensInfo = useEns()
   const [nfts, setNfts] = useState([])
 
   useEffect(() => {
     ; (async () => {
-      const provider = new ethers.providers.JsonRpcProvider(
-        `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`
-      )
-      const ens = new ENS({ provider, ensAddress: getEnsAddress('1') })
-      // TODO: using this for dev purposes, switch to document.URL when going live
-      //       then, check for the subdomain higher since I'm assuming the app
-      //       will run on sth like gallery.anon.eth (so want anon.eth to resolve)
-      //
-      //       support eth.limo as well was eth.link
-      // const url = new URL(document.URL)
-      let host = 'dcinvestor.eth.link'
-
-      if (host.endsWith('.link')) {
-        host = host.substring(0, host.length - 5)
-      }
-
-      setEnsDomain(host)
-
-      const resolvedAddress = await ens.name(ensDomain).getAddress()
-      //console.log(`Address for ${ensDomain} is ${resolvedAddress}`)
-
-      setDomainAddr(resolvedAddress)
       setNfts(ACCOUNT_ADDRESS.nfts)
       /*
         .then((addr: string) => {
@@ -64,7 +39,7 @@ const HomePage = () => {
           })
           */
     })()
-  }, [ensDomain])
+  }, [ensInfo.address])
 
   return (
     <>
@@ -75,7 +50,7 @@ const HomePage = () => {
 You can look at this documentation for best practices : https://developers.google.com/search/docs/advanced/appearance/good-titles-snippets */
       />
       <h1>
-        Gallery for {ensDomain} @ {domainAddr}
+        Gallery for {ensInfo.domain} @ {ensInfo.address}
       </h1>
 
       <Gallery images={nfts}></Gallery>
