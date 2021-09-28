@@ -1,11 +1,11 @@
 import { render } from '@redwoodjs/testing/web'
 
-import NftImage from './NftImage'
+import NftAsset from './NftAsset'
 
-describe('NftImage', () => {
+describe('NftAsset', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<NftImage />)
+      render(<NftAsset />)
     }).not.toThrow()
   })
 })

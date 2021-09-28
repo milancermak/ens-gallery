@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export type NftImageProps = {
+export type NftAssetProps = {
   contract_address: string
   token_id: string
   token_uri: string
@@ -11,7 +11,7 @@ export type NftImageProps = {
   }
 }
 
-const NftImage = (nft: NftImageProps) => {
+const NftAsset = (nft: NftAssetProps) => {
   const [imageFailedToLoad, setImageFailedToLoad] = useState(false)
 
   if (nft.metadata?.image) {
@@ -34,4 +34,4 @@ const NftImage = (nft: NftImageProps) => {
   return <></>
 }
 
-export default NftImage
+export default NftAsset
