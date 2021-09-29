@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useEns } from 'src/hooks/useEns'
 import { ACCOUNT_ADDRESS } from 'src/Mock'
 import Gallery from 'src/components/Gallery/Gallery'
+import { NftAssetProps } from 'src/components/NftAsset/NftAsset'
 
 const HomePage = () => {
   const ensInfo = useEns()
@@ -10,34 +11,25 @@ const HomePage = () => {
 
   useEffect(() => {
     ; (async () => {
-      setNfts(ACCOUNT_ADDRESS.nfts)
-      /*
-        .then((addr: string) => {
-          console.log(`Address for ${ethDomain} is ${addr}`)
+      const nfts: Array<NftAssetProps> = ACCOUNT_ADDRESS['nfts']
+      nfts.sort((a, b) => {
+        if (a.contract_address == b.contract_address) {
+          return a.token_id.localeCompare(b.token_id)
+        }
+        return a.contract_address.localeCompare(b.contract_address)
+      })
 
-          /*
-        const accountNfts = `https://api.nftport.xyz/account/${addr}/nfts?chain=ethereum&include=metadata`
-        fetch(accountNfts, {
-          headers: {
-            Accept: 'application/json',
-            Authorization: process.env.NFTPORT_API_KEY,
-          },
-        })
+      for (const nft of nfts) {
+        if (nft.metadata?.image?.startsWith('ipfs://')) {
+          // use Cloudflare's IPFS gateway to access assets in ipfs://
+          nft.metadata.image = nft.metadata.image.replace(
+            'ipfs://',
+            'https://cloudflare-ipfs.com/'
+          )
+        }
+      }
 
-          .then((response: Response) => {
-            return response.json()
-          })
-
-          Promise.resolve(ACCOUNT_ADDRESS)
-            .then((json: any) => json['nfts'])
-            .then(
-              (nfts: Array<{ contract_address: string; token_id: string }>) => {
-                console.log(`Got ${nfts.length} results`)
-                console.log(JSON.stringify(nfts[0]))
-              }
-            )
-          })
-          */
+      setNfts(nfts)
     })()
   }, [ensInfo.address])
 

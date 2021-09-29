@@ -1,14 +1,15 @@
 import { useState } from 'react'
 
+type NftAssetMetadata = {
+  description?: string
+  image?: string
+  name?: string
+}
+
 export type NftAssetProps = {
   contract_address: string
   token_id: string
-  token_uri: string
-  metadata?: {
-    description: string
-    image: string
-    name: string
-  }
+  metadata: NftAssetMetadata | undefined
 }
 
 const NftAsset = (nft: NftAssetProps) => {
