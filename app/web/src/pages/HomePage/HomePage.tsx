@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react'
 import { useEns } from 'src/hooks/useEns'
 import { ACCOUNT_ADDRESS } from 'src/Mock'
 import Gallery from 'src/components/Gallery/Gallery'
+import Header from 'src/components/Header/Header'
+import Loader from 'src/components/Loader/Loader'
 import { NftAssetProps } from 'src/components/NftAsset/NftAsset'
 
 const HomePage = () => {
   const ensInfo = useEns()
-  const [nfts, setNfts] = useState([])
+  const [nfts, setNfts] = useState(null)
 
   useEffect(() => {
     ; (async () => {
@@ -41,11 +43,14 @@ const HomePage = () => {
       /* you should un-comment description and add a unique description, 155 characters or less
 You can look at this documentation for best practices : https://developers.google.com/search/docs/advanced/appearance/good-titles-snippets */
       />
-      <h1>
-        Gallery for {ensInfo.domain} @ {ensInfo.address}
-      </h1>
-
-      <Gallery images={nfts}></Gallery>
+      {ensInfo.address && nfts ? (
+        <>
+          <Header ensInfo={ensInfo}></Header>
+          <Gallery images={nfts}></Gallery>
+        </>
+      ) : (
+        <Loader></Loader>
+      )}
     </>
   )
 }

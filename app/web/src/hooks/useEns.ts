@@ -3,8 +3,6 @@ import React from 'react'
 import { ethers } from 'ethers'
 import ENS, { getEnsAddress } from '@ensdomains/ensjs'
 
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-
 type EnsInfo = {
   address?: string
   domain?: string
@@ -42,7 +40,7 @@ const resolveDomain = async (): Promise<EnsInfo> => {
 // TODO: maybe use a reducer here?
 const useEns = () => {
   const [ensInfo, setEnsInfo] = React.useState<EnsInfo>({
-    address: ZERO_ADDRESS,
+    address: null,
     domain: null,
   })
 
