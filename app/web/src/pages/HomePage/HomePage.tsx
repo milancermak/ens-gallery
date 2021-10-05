@@ -37,6 +37,7 @@ const HomePage = () => {
 
   return (
     <>
+      <link rel="manifest" href="manifest.json"></link>
       <MetaTags
         title="Home"
       // description="Home description"
