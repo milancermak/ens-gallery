@@ -1,4 +1,4 @@
-name: Build and deploy 
+name: Build and deploy
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./app/web
+        working-directory: ./app
 
     steps:
     - name: Checkout
@@ -29,16 +29,16 @@ jobs:
 
     - name: Run tests
       continue-on-error: true
-      run: yarn rw test web --no-watch --silent --ci
-      
+      run: yarn redwood test web --no-watch --silent --ci
+
     - name: Build web
       env:
         INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
         NFTPORT_API_KEY: ${{ secrets.NFTPORT_API_KEY }}
-      run: yarn rw build web
-      
+      run: yarn redwood build web
+
     - name: Deploy to Skynet
       uses: SkynetLabs/deploy-to-skynet-action@v2
       with:
-        upload-dir: dist
+        upload-dir: web/dist
         github-token: ${{ secrets.GITHUB_TOKEN }}
