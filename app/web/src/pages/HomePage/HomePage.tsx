@@ -1,4 +1,4 @@
-import { MetaTags } from '@redwoodjs/web'
+import { MetaTags, Head } from '@redwoodjs/web'
 import { useEffect, useState } from 'react'
 import { useEns } from 'src/hooks/useEns'
 import { ACCOUNT_ADDRESS } from 'src/Mock'
@@ -37,7 +37,9 @@ const HomePage = () => {
 
   return (
     <>
-      <link rel="manifest" href="manifest.json"></link>
+      <Head>
+        <link rel="manifest" href="manifest.json" />
+      </Head>
       <MetaTags
         title="Home"
       // description="Home description"
