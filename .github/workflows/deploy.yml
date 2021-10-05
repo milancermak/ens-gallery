@@ -41,5 +41,5 @@ jobs:
     - name: Deploy to Skynet
       uses: SkynetLabs/deploy-to-skynet-action@v2
       with:
-        upload-dir: web/dist
+        upload-dir: app/web/dist
         github-token: ${{ secrets.GITHUB_TOKEN }}
