@@ -3,12 +3,18 @@ name: Build and deploy
 on:
   push:
     branches: [ master ]
+    paths-ignore:
+      - README.md
   pull_request:
     branches: [ master ]
 
 jobs:
   build:
+    # look for '[skip ci]' or '[ci skip]' in the commit message, don't run if present
+    if: "!(contains(toJSON(github.event.commits.*.message), '[skip ci]') || contains(toJSON(github.event.commits.*.message), '[ci skip]'))"
+
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     defaults:
       run:
