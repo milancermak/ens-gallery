@@ -8,7 +8,7 @@ type GalleryProps = {
 const Gallery = (props: GalleryProps) => {
   // TODO: deal with empty galleries
   return (
-    <div className="container grid grid-cols-1 md:grid-cols-3 gap-12 px-4i md:px-32 mx-auto">
+    <div className="container grid grid-cols-1 md:grid-cols-3 gap-12 md:px-32 mx-auto mb-12">
       {props.images.map((nft) => (
         <NftAsset {...nft} key={nft.contract_address + '/' + nft.token_id} />
       ))}

@@ -24,7 +24,7 @@ const NftAsset = (nft: NftAssetProps) => {
           <video src={nft.metadata?.image}></video>
         ) : (
           <img
-            className="object-contain object-center h-full"
+            className="object-scale-down object-center h-full w-full"
             src={nft.metadata.image}
             alt={nft.metadata?.name || 'NFT'}
             onError={() => setImageFailedToLoad(true)}
