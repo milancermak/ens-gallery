@@ -1,18 +1,24 @@
-name: Build and deploy 
+name: Build and deploy
 
 on:
   push:
     branches: [ master ]
+    paths-ignore:
+      - README.md
   pull_request:
     branches: [ master ]
 
 jobs:
   build:
+    # look for '[skip ci]' or '[ci skip]' in the commit message, don't run if present
+    if: "!(contains(toJSON(github.event.commits.*.message), '[skip ci]') || contains(toJSON(github.event.commits.*.message), '[ci skip]'))"
+
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     defaults:
       run:
-        working-directory: ./app/web
+        working-directory: ./app
 
     steps:
     - name: Checkout
@@ -23,22 +29,23 @@ jobs:
       with:
         node-version: '14'
         cache: 'yarn'
+        cache-dependency-path: app/yarn.lock
 
     - name: Install dependencies
       run: yarn install
 
     - name: Run tests
       continue-on-error: true
-      run: yarn rw test web --no-watch --silent --ci
-      
+      run: yarn redwood test web --no-watch --silent --ci
+
     - name: Build web
       env:
         INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
         NFTPORT_API_KEY: ${{ secrets.NFTPORT_API_KEY }}
-      run: yarn rw build web
-      
+      run: yarn redwood build web
+
     - name: Deploy to Skynet
       uses: SkynetLabs/deploy-to-skynet-action@v2
       with:
-        upload-dir: dist
+        upload-dir: app/web/dist
         github-token: ${{ secrets.GITHUB_TOKEN }}
