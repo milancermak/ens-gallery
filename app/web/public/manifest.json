@@ -5,7 +5,8 @@
   "icons": [{
     "sizes": "48x48 72x72 96x96 160x160 320x320",
     "type": "image/png",
-    "src": "./favicon.png"
+    "src": "favicon.png",
+    "purpose": "any"
   }],
   "name": "NFT Gallery",
   "short_name": "NFT Gallery",
