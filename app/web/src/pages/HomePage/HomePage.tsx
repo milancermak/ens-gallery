@@ -13,7 +13,31 @@ const HomePage = () => {
 
   useEffect(() => {
     ; (async () => {
-      const nfts: Array<NftAssetProps> = ACCOUNT_ADDRESS['nfts']
+      if (ensInfo.address === undefined || ensInfo.address === null) {
+        return
+      }
+
+      const nftsBaseUrl = `https://api.nftport.xyz/account/${ensInfo.address}/nfts?chain=ethereum&include=metadata`
+      const headers = {
+        Accept: 'application/json',
+        Authorization: process.env['NFTPORT_API_KEY'],
+      }
+
+      let fetchUrl = nftsBaseUrl
+      const nfts: NftAssetProps[] = []
+
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        // console.log(`fetching ${fetchUrl}`)
+        const response = await (await fetch(fetchUrl, { headers })).json()
+        nfts.push(...response.nfts)
+        if (response.continuation === null) {
+          // console.log(`got ${nfts.length} assets`)
+          break
+        }
+        fetchUrl = nftsBaseUrl + `&continuation=${response.continuation}`
+      }
+
       nfts.sort((a, b) => {
         if (a.contract_address == b.contract_address) {
           return a.token_id.localeCompare(b.token_id)
