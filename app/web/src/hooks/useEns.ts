@@ -3,16 +3,18 @@ import React from 'react'
 import { ethers } from 'ethers'
 import ENS, { getEnsAddress } from '@ensdomains/ensjs'
 
+// TODO: this thing needs to be refactored
+
 type EnsInfo = {
-  address?: string
-  domain?: string
+  address: string | null
+  domain: string | null
 }
 
-const parseDomain = (): string => {
+const parseDomain = (): string | null => {
   const url = new URL(document.URL)
-  if (url.hostname == 'localhost') return 'dcinvestor.eth'
-  const demo = url.searchParams.get('d')
-  if (demo) return demo
+  if (url.hostname == 'localhost' || url.hostname.endsWith('siasky.net')) {
+    return null
+  }
 
   let domain = url.hostname
   if (domain.endsWith('.link') || domain.endsWith('.limo')) {
@@ -24,21 +26,24 @@ const parseDomain = (): string => {
   return domain
 }
 
-const resolveDomain = async (): Promise<EnsInfo> => {
+const resolveDomain = async (domain: string): Promise<EnsInfo> => {
   const provider = new ethers.providers.JsonRpcProvider(
     `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`
   )
   const ens = new ENS({ provider, ensAddress: getEnsAddress('1') })
 
-  const domain = parseDomain()
+  if (domain === null) {
+    return { address: null, domain: null }
+  }
+
   const address = await ens.name(domain).getAddress()
-  //console.log(`Resolved ${domain} to ${address}`)
+  console.log(`Resolved ${domain} to ${address}`)
 
   return { address, domain }
 }
 
 // TODO: maybe use a reducer here?
-const useEns = () => {
+const useEns = (): [EnsInfo, React.Dispatch<React.SetStateAction<EnsInfo>>] => {
   const [ensInfo, setEnsInfo] = React.useState<EnsInfo>({
     address: null,
     domain: null,
@@ -46,12 +51,17 @@ const useEns = () => {
 
   React.useEffect(() => {
     ; (async () => {
-      const resolvedInfo: EnsInfo = await resolveDomain()
+      let domain = ensInfo.domain
+      if (domain === null) {
+        domain = parseDomain()
+      }
+      console.log(`useEffect ${domain}`)
+      const resolvedInfo: EnsInfo = await resolveDomain(domain)
       setEnsInfo(resolvedInfo)
     })()
   }, [ensInfo.domain])
 
-  return ensInfo
+  return [ensInfo, setEnsInfo]
 }
 
 export { EnsInfo, useEns }

@@ -1,19 +1,19 @@
 import { MetaTags } from '@redwoodjs/web'
 import { useEffect, useState } from 'react'
 import { useEns } from 'src/hooks/useEns'
-import { ACCOUNT_ADDRESS } from 'src/Mock'
+import AddressPicker from 'src/components/AddressPicker/AddressPicker'
 import Gallery from 'src/components/Gallery/Gallery'
 import Header from 'src/components/Header/Header'
 import Loader from 'src/components/Loader/Loader'
 import { NftAssetProps } from 'src/components/NftAsset/NftAsset'
 
 const HomePage = () => {
-  const ensInfo = useEns()
+  const [ensInfo, setEns] = useEns()
   const [nfts, setNfts] = useState(null)
 
   useEffect(() => {
     ; (async () => {
-      if (ensInfo.address === undefined || ensInfo.address === null) {
+      if (ensInfo.address === null) {
         return
       }
 
@@ -59,17 +59,19 @@ const HomePage = () => {
     })()
   }, [ensInfo.address])
 
+  if (ensInfo.address === null) {
+    return <AddressPicker setEns={setEns} />
+  }
+
+  if (nfts === null) {
+    return <Loader />
+  }
+
   return (
     <>
       <MetaTags title="NFT Gallery" />
-      {ensInfo.address && nfts ? (
-        <>
-          <Header ensInfo={ensInfo}></Header>
-          <Gallery images={nfts}></Gallery>
-        </>
-      ) : (
-        <Loader></Loader>
-      )}
+      <Header title={ensInfo.domain} />
+      <Gallery images={nfts} />
     </>
   )
 }
